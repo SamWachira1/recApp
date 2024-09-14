@@ -1,5 +1,9 @@
 {
   "node": {},
   "edge": {},
+<<<<<<< HEAD
   "encryptionKey": "SOil7GEQdqpW2wzKKuZ41m5vO/HxHrMBug5aVkEJXqM="
+=======
+  "encryptionKey": "3LOjJ4LYE16Wpbh1DAOsgPrt4ZXJ+VyVfduwb47H+wQ="
+>>>>>>> google-auth
 }

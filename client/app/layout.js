@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import '../styles/globals.css'
 
 const RootLayout = ({children})=>{
@@ -7,8 +8,22 @@ const RootLayout = ({children})=>{
                 {children}
             </body>
         </html>
+=======
+// client/app/layout.js (Next.js 13)
+"use client";
+>>>>>>> google-auth
 
-    </>)
-}
+import { Provider } from 'react-redux';
+import store from '../store';
 
-export default RootLayout
+const RootLayout = ({ children }) => (
+  <html lang="en">
+    <body>
+      <Provider store={store}>
+        {children}
+      </Provider>
+    </body>
+  </html>
+);
+
+export default RootLayout;

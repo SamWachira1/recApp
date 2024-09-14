@@ -1,24 +1,62 @@
-import express from 'express'
-import { Profile } from '../models/profile.js'
-const router = express.Router()
+// server/routes/profiles.js
+import express from 'express';
+import { Profile } from '../models/profile.js';
+import { checkAuth } from '../middleware/checkAuth.js';
 
-router.get('/', (_, res)=>{
-    
-    Profile.find().then(profiles => res.json(profiles)).catch(err => err.status(404))
-})
+const router = express.Router();
 
-router.patch('/', (req, res)=> {
-    res.json('patch works')
-})
+// Public route: Get all profiles
+router.get('/', async (_, res) => {
+  try {
+    const profiles = await Profile.find();
+    res.json(profiles);
+  } catch (error) {
+    res.status(404).json({ error: 'Profiles not found' });
+  }
+});
 
-router.post('/', (req, res)=> {
-    res.json('post works')
-})
+// Protected route: Update a profile
+router.patch('/:profileId', checkAuth, async (req, res) => {
+  const { profileId } = req.params;
+  const updateData = req.body;
 
-router.delete('/:profileId', (req, res)=> {
+  try {
+    const updatedProfile = await Profile.findByIdAndUpdate(profileId, updateData, { new: true });
+    if (!updatedProfile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+    res.json(updatedProfile);
+  } catch (error) {
+    res.status(400).json({ error: 'Unable to update profile' });
+  }
+});
 
-    res.json(`Profile ${req.params.profileId} was deleted`)
-})
+// Protected route: Create a new profile
+router.post('/', checkAuth, async (req, res) => {
+  const profileData = req.body;
 
+  try {
+    const newProfile = await Profile.create(profileData);
+    res.json(newProfile);
+  } catch (error) {
+    res.status(400).json({ error: 'Unable to create profile' });
+  }
+});
 
-export const profiles = router 
+// Protected route: Delete a profile
+router.delete('/:profileId', checkAuth, async (req, res) => {
+  const { profileId } = req.params;
+
+  try {
+    const deletedProfile = await Profile.findByIdAndDelete(profileId);
+    if (!deletedProfile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+    res.json({ message: `Profile ${profileId} was deleted` });
+  } catch (error) {
+    res.status(400).json({ error: 'Unable to delete profile' });
+  }
+});
+
+// Export the router as 'profileRoutes'
+export const profileRoutes = router;

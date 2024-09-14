@@ -1,3 +1,7 @@
 {
+<<<<<<< HEAD
+=======
+  "/dashboard/page": "app/dashboard/page.js",
+>>>>>>> google-auth
   "/page": "app/page.js"
 }
