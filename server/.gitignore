@@ -1,0 +1,4 @@
+/config/keys.js
+/config/firebaseAdmin.js
+/node_modules
+serviceAccountKey.json
