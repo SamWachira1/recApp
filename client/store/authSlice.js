@@ -1,18 +1,14 @@
 // client/store/authSlice.js
-"use client";
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { auth, googleProvider } from '../firebase'; // Import Firebase auth
+import { auth, googleProvider } from '../firebase';
 import { signInWithPopup, signOut as firebaseSignOut } from 'firebase/auth';
 
 // Async thunk for Google Sign-In
 export const signInWithGoogle = createAsyncThunk('auth/signInWithGoogle', async (_, { rejectWithValue }) => {
   try {
-    // Sign in with Google
     const result = await signInWithPopup(auth, googleProvider);
-    const token = await result.user.getIdToken(); // Get Firebase ID token
+    const token = await result.user.getIdToken();
 
-    // Send the token to the backend for verification and storing user info
     const response = await fetch('http://localhost:5000/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -24,8 +20,7 @@ export const signInWithGoogle = createAsyncThunk('auth/signInWithGoogle', async 
     }
 
     const data = await response.json();
-    return data.user; // Return the user data from the server
-
+    return data.user;
   } catch (error) {
     return rejectWithValue(error.message);
   }
@@ -34,7 +29,6 @@ export const signInWithGoogle = createAsyncThunk('auth/signInWithGoogle', async 
 // Async thunk for signing out
 export const signOut = createAsyncThunk('auth/signOut', async (_, { rejectWithValue }) => {
   try {
-    // Sign out from Firebase
     await firebaseSignOut(auth);
   } catch (error) {
     return rejectWithValue(error.message);
@@ -52,7 +46,11 @@ const initialState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signInWithGoogle.pending, (state) => {
@@ -74,4 +72,5 @@ const authSlice = createSlice({
 });
 
 // Export actions and reducer
+export const { setUser } = authSlice.actions; // Export the new setUser action
 export default authSlice.reducer;

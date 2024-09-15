@@ -8,7 +8,11 @@ import cors from 'cors';
 const app = express();
 
 // CORS configuration
-app.use(cors())
+app.use(cors({
+  origin: ['http://localhost:3000'], // Replace with your client URL if needed
+  credentials: true,
+}));
+
 app.use(express.json());
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
