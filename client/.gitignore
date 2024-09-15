@@ -1,3 +1,4 @@
 /node_modules
 /firebase.js
 client/.next
+app/firebase.js
